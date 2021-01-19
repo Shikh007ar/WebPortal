@@ -1,0 +1,29 @@
+<%- include("partials/header") -%>
+
+
+
+<div  class="container">
+  <div style="margin: 0 auto;" class="row">
+    <% for( var i=0; i<userData.length; i++){ %>
+
+      <form class="col-lg-3 col-md-6 col-sm-12" style="text-align: center; width:250px;" action="/delete" method="post">
+        <div>
+          <img class="testimonial-image" src="images/lady-img.jpg" alt="lady-profile">
+          <div style=" border-radius:5%; background-color: #e8eae6; height: 200px;">
+            <p style="font-weight: bold ;padding-top: 10px;"> <%= userData[i].name %></p>
+            <h6 class="testimonial-text"><%= userData[i].review %></h6>
+            <button id="deleteOption" type="submit" name="button" value="<%= userData[i]._id %>">
+              <i  class=" fas fa-trash-alt" ></i>
+            </button>
+          </div>
+        </div>
+      </form>
+
+    <% } %>
+  </div>
+</div>
+
+
+
+
+<%- include("partials/footer") -%>

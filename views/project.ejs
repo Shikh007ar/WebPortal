@@ -1,0 +1,289 @@
+<%- include("partials/header") -%>
+
+<section>
+  <div id="imagediv">
+    <img class="Bimage" src="images/Ditphotoo.jpg" alt="ditimage">
+    <div id="intro">
+      <p style="margin-bottom: 0;">Welcome to student community of DIT University</p>
+      <button class="Lbutton" type="button" name="button">Login To My Portal</button>
+    </div>
+  </div>
+
+</section>
+
+<section class="container" id="section2">
+  <div class="row" style="margin-left: 0; margin-right: 0; ">
+    <div class="col-lg-4 col-md-4 row adjust">
+      <img class="features" src="images/graduate.png" alt="alumni">
+      <div class="featureDiv">
+        <p class="silentF">Alumni</p>
+        <p class="silentFe">Overall in here</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 row adjust">
+      <img class="features" src="images/cluv.png" alt="sports">
+      <div class="featureDiv">
+        <p class="silentF">Clubs</p>
+        <p class="silentFe">Overall in here</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 row adjust">
+      <img class="features" src="images/person.png" alt="networking">
+      <div class="featureDiv">
+        <p class="silentF">Social</p>
+        <p class="silentFe">Overall in here</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12 row" style=" margin-left: 0; padding-left: 0; padding-right: 0;">
+    <div class="col-lg-6" style="padding-left: 0; padding-right: 0;">
+      <img class="alumniImage" src="images/Banner.jpg" alt="alumni">
+    </div>
+    <div class="col-lg-6" style="background-color: #a4c5c6; padding-bottom: 10px;">
+      <h2 class="AlumniH">Alumni</h2>
+      <p class="alumniInfo">Creating an engaged, supportive alumni network is crucial for all those students who are currently studying in the institution
+        as it provides them the opportunity to be in touch with them to get updated on what's going on in corporate world.</p>
+      <p class="alumniInfo">So here is the Blog part of our website where you can see all the views posted by our alumni.</p>
+      <button class="Abutton" type="button" name="button">Go To Blog >> </button>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="testimonials">
+  <p class="reviewLine">See what our Users has to say</p>
+  <div style="padding-left: 50px; padding-right: 50px;">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-12" style="text-align: center; width:250px;">
+        <img class="testimonial-image" src="images/lady-img.jpg" alt="lady-profile">
+        <div style="border-radius: 5%;background-color: #e8eae6; height: 200px;">
+          <p style="font-weight: bold; padding-top: 10px ;"> Vannsh, Sharanpur</p>
+          <h6 class="testimonial-text">I think this website is too good for creating
+            connect with college students if you don't know them personnaly.</h6>
+        </div>
+      </div>
+
+      <% for( var i=0; i<userData.length; i++){ %>
+      <form class="col-lg-3 col-md-6 col-sm-12" style="text-align: center; width:250px;" action="/delete" method="post">
+      <div>
+        <img class="testimonial-image" src="images/lady-img.jpg" alt="lady-profile">
+        <div style="position: relative; border-radius: 5%;background-color: #e8eae6; height: 200px;">
+          <p style="font-weight: bold ;padding-top: 10px;"> <%= userData[i].name %></p>
+          <h6 class="testimonial-text"><%= userData[i].review %></h6>
+          <button id="deleteOption" type="submit" name="button" value="<%= userData[i]._id %>">
+            <i  class=" fas fa-trash-alt" ></i>
+          </button>
+        </div>
+      </div>
+      </form>
+      <% if(i==1){ %>
+      <% break; %>
+      <% } %>
+      <% } %>
+
+      <div class="col-lg-3 col-md-6 col-sm-12" >
+        <div style="padding-top: 150px;">
+          <h6 style="text-align: center;font-family: 'Poppins', sans-serif; font-size: 25px;">See All Reviews:</h6>
+          <div style="vertical-align: middle; text-align: center;">
+            <a href="/allReviews">
+              <span class="right"></span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <p  style=" padding-top:10px; text-align: center;font-family: 'Poppins', sans-serif; font-size: 20px;">Want to add a review? <a class="addingReview" href="/addReview">Click Here</a> </p>
+
+</section>
+
+
+<section id="section4">
+  <h1 class="teamHeading">Our Team</h1>
+  <div id="teamS" class="row">
+
+    <div id="curve" class="card1">
+      <div class="footer">
+        <div class="connections">
+          <div class="connection linkedInn">
+            <div class="icon">
+              <a href="https://www.facebook.com/"><i class="fab fa-linkedin-in fa-2x"></i></a>
+            </div>
+          </div>
+          <div class="connection insta">
+            <div class="icon">
+              <a href="https://www.instagram.com/"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+          </div>
+        </div>
+        <svg id="curve">
+          <path id="p" d="M0,200 Q80,100 400,200 V150 H0 V50" transform="translate(0 300)" />
+          <rect id="dummyRect" x="0" y="0" height="450" width="400" fill="transparent" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,100 400,50 V150 H0 V50" fill="freeze" begin="dummyRect.mouseover" end="dummyRect.mouseout" dur="0.1s" id="bounce1" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,0 400,50 V150 H0 V50" fill="freeze" begin="bounce1.end" end="dummyRect.mouseout" dur="0.15s" id="bounce2" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,80 400,50 V150 H0 V50" fill="freeze" begin="bounce2.end" end="dummyRect.mouseout" dur="0.15s" id="bounce3" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,45 400,50 V150 H0 V50" fill="freeze" begin="bounce3.end" end="dummyRect.mouseout" dur="0.1s" id="bounce4" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,50 400,50 V150 H0 V50" fill="freeze" begin="bounce4.end" end="dummyRect.mouseout" dur="0.05s" id="bounce5" />
+          <animate xlink:href="#p" attributeName="d" to="M0,200 Q80,100 400,200 V150 H0 V50" fill="freeze" begin="dummyRect.mouseout" dur="0.15s" id="bounceOut" />
+        </svg>
+        <div class="info">
+          <div class="name">Shikhar Chauhan</div>
+          <div class="job">Team Member</div>
+        </div>
+      </div>
+      <div class="card-blur"></div>
+    </div>
+    <div id="curve" class="card2">
+      <div class="footer">
+        <div class="connections">
+          <div class="connection linkedInn">
+            <div class="icon">
+              <a href="https://www.facebook.com/"><i class="fab fa-linkedin-in fa-2x"></i></a>
+            </div>
+          </div>
+          <div class="connection insta">
+            <div class="icon">
+              <a href="https://www.instagram.com/"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+          </div>
+        </div>
+        <svg id="curve">
+          <path id="p" d="M0,200 Q80,100 400,200 V150 H0 V50" transform="translate(0 300)" />
+          <rect id="dummyRect" x="0" y="0" height="450" width="400" fill="transparent" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,100 400,50 V150 H0 V50" fill="freeze" begin="dummyRect.mouseover" end="dummyRect.mouseout" dur="0.1s" id="bounce1" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,0 400,50 V150 H0 V50" fill="freeze" begin="bounce1.end" end="dummyRect.mouseout" dur="0.15s" id="bounce2" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,80 400,50 V150 H0 V50" fill="freeze" begin="bounce2.end" end="dummyRect.mouseout" dur="0.15s" id="bounce3" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,45 400,50 V150 H0 V50" fill="freeze" begin="bounce3.end" end="dummyRect.mouseout" dur="0.1s" id="bounce4" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,50 400,50 V150 H0 V50" fill="freeze" begin="bounce4.end" end="dummyRect.mouseout" dur="0.05s" id="bounce5" />
+          <animate xlink:href="#p" attributeName="d" to="M0,200 Q80,100 400,200 V150 H0 V50" fill="freeze" begin="dummyRect.mouseout" dur="0.15s" id="bounceOut" />
+        </svg>
+        <div class="info">
+          <div class="name">Vannsh Nijhawan</div>
+          <div class="job">Team Member</div>
+        </div>
+      </div>
+      <div class="card-blur"></div>
+    </div>
+    <div id="curve" class="card3">
+      <div class="footer">
+        <div class="connections">
+          <div class="connection linkedInn">
+            <div class="icon">
+              <a href="https://www.facebook.com/"><i class="fab fa-linkedin-in fa-2x"></i></a>
+            </div>
+          </div>
+          <div class="connection insta">
+            <div class="icon">
+              <a href="https://www.instagram.com/"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+          </div>
+        </div>
+        <svg id="curve">
+          <path id="p" d="M0,200 Q80,100 400,200 V150 H0 V50" transform="translate(0 300)" />
+          <rect id="dummyRect" x="0" y="0" height="450" width="400" fill="transparent" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,100 400,50 V150 H0 V50" fill="freeze" begin="dummyRect.mouseover" end="dummyRect.mouseout" dur="0.1s" id="bounce1" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,0 400,50 V150 H0 V50" fill="freeze" begin="bounce1.end" end="dummyRect.mouseout" dur="0.15s" id="bounce2" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,80 400,50 V150 H0 V50" fill="freeze" begin="bounce2.end" end="dummyRect.mouseout" dur="0.15s" id="bounce3" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,45 400,50 V150 H0 V50" fill="freeze" begin="bounce3.end" end="dummyRect.mouseout" dur="0.1s" id="bounce4" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,50 400,50 V150 H0 V50" fill="freeze" begin="bounce4.end" end="dummyRect.mouseout" dur="0.05s" id="bounce5" />
+          <animate xlink:href="#p" attributeName="d" to="M0,200 Q80,100 400,200 V150 H0 V50" fill="freeze" begin="dummyRect.mouseout" dur="0.15s" id="bounceOut" />
+        </svg>
+        <div class="info">
+          <div class="name">Samakshi Goel</div>
+          <div class="job">Team Member</div>
+        </div>
+      </div>
+      <div class="card-blur"></div>
+    </div>
+    <div id="curve" class="card4">
+      <div class="footer">
+        <div class="connections">
+          <div class="connection linkedInn">
+            <div class="icon">
+              <a href="https://www.facebook.com/"><i class="fab fa-linkedin-in fa-2x"></i></a>
+            </div>
+          </div>
+          <div class="connection insta">
+            <div class="icon">
+              <a href="https://www.instagram.com/"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+          </div>
+        </div>
+        <svg id="curve">
+          <path id="p" d="M0,200 Q80,100 400,200 V150 H0 V50" transform="translate(0 300)" />
+          <rect id="dummyRect" x="0" y="0" height="450" width="400" fill="transparent" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,100 400,50 V150 H0 V50" fill="freeze" begin="dummyRect.mouseover" end="dummyRect.mouseout" dur="0.1s" id="bounce1" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,0 400,50 V150 H0 V50" fill="freeze" begin="bounce1.end" end="dummyRect.mouseout" dur="0.15s" id="bounce2" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,80 400,50 V150 H0 V50" fill="freeze" begin="bounce2.end" end="dummyRect.mouseout" dur="0.15s" id="bounce3" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,45 400,50 V150 H0 V50" fill="freeze" begin="bounce3.end" end="dummyRect.mouseout" dur="0.1s" id="bounce4" />
+          <animate xlink:href="#p" attributeName="d" to="M0,50 Q80,50 400,50 V150 H0 V50" fill="freeze" begin="bounce4.end" end="dummyRect.mouseout" dur="0.05s" id="bounce5" />
+          <animate xlink:href="#p" attributeName="d" to="M0,200 Q80,100 400,200 V150 H0 V50" fill="freeze" begin="dummyRect.mouseout" dur="0.15s" id="bounceOut" />
+        </svg>
+        <div class="info">
+          <div class="name">Nayanam Sachdev</div>
+          <div class="job">Team Member</div>
+        </div>
+      </div>
+      <div class="card-blur"></div>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+
+
+
+<section id="section5">
+
+  <div id="sectionMainDiv" class="row">
+    <div class="leftDiv">
+      <div class="actuallyLeft">
+        <div class="footerData">
+          <h1 class="siteName">CollegeSpace</h1>
+        </div>
+        <div id="addressDiv">
+          <div class="addressDivLeft">
+            <p class="footerLines">Mussoorie-Diversion Road</p>
+            <p class="footerLines">Village Makkawala, Dehradun</p>
+            <p class="footerLines">Uttarakhand-248009, India</p>
+          </div>
+          <div class="addressDivRight">
+            <p class="footerLines">Contact Number:</p>
+            <p class="footerLines">9719130555</p>
+          </div>
+        </div>
+        <div class="contactBelow">
+          <a class="top1" href="#"><i style="padding-right: 5px;" class="far fa-envelope fa-1x"></i>contact@CollegeSpace.com</a>
+        </div>
+        <div id="buttonsDiv">
+          <div class="buttonDivLeft">
+            <button class="footerButton1" type="button" name="button">ROUTE</button>
+          </div>
+          <div class="buttonsDivRight">
+            <button class="footerButton2" type="button" name="button">LEAVE A MESSAGE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rightDiv">
+      <div class="mapouter">
+        <div class="gmap_canvas">
+          <iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=DIT%20University&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+          <a href="https://123movies-to.org">123movies online</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<%- include("partials/footer") -%>
