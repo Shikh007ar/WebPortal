@@ -1,7 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const encrypt = require("mongoose-encryption");
 
 mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -82,6 +84,57 @@ app.post("/delete", function(req, res){
   });
 });
 
+
+
+// Here are all things related to login and signup Page
+app.get("/loginORsignup", function(req, res){
+  res.render("loginORsignup");
+})
+const userDetail = new mongoose.Schema({
+  name: String,
+  lname: String,
+  email: String,
+  password: String
+});
+
+userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
+
+const Detail = new mongoose.model("Detail", userDetail);
+const user1 = new Detail({
+  name: "Shikhar",
+  lname: "Chauhan",
+  email: "shikharchauhan07@gmail.com",
+  password: "hello"
+});
+// user1.save();
+app.post("/login", function(req, res){
+  let username= req.body.username;
+  let password = req.body.password;
+  Detail.findOne({email: username}, function(err, foundUser){
+    if(err) console.log(err);
+    else{
+      if(foundUser){
+        if(foundUser.password === password){
+          res.render("portal");
+        }else console.log("password not matching!");
+      }else console.log("You are currently not registered.");
+    }
+  })
+});
+
+app.get("/register", function(req, res){
+  res.render("register");
+});
+app.post("/register", function(req, res){
+  const addUser = new Detail({
+    name: req.body.first,
+    lname: req.body.last,
+    email: req.body.username,
+    password: req.body.password
+  });
+  addUser.save();
+  res.render("loginORsignup");
+});
 
 
 

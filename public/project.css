@@ -101,11 +101,11 @@ a.top:hover {
   margin: 0px 30px;
   margin-top: 40px;
   text-decoration: none;
-  transition-duration: 1s;
+  transition-duration: 0.5s;
 }
 
 #Stop:hover {
-  font-size: 20px;
+  /* font-size: 17.5px; */
   font-weight: bold;
   color: #1d2d50;
 }
@@ -914,4 +914,53 @@ svg#curve {
     font-size: 20px;
     margin-right: 15px;
   }
+}
+
+
+/* login page starting css->>>>>>>>>>>>>>>>>>>>>> */
+.div1{
+  height:600px;
+  background-color: #1f4068;
+}
+.div2{
+  height: 600px;
+  background-color: white;
+}
+
+.my-image{
+  width:100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-top: 150px;
+  margin-bottom: 20px;
+}
+.paragraph{
+  text-align: centre;
+  font-size: 28px;
+  font-family: 'Liu Jian Mao Cao',cursive;
+}
+.Label{
+  font-size: 15px;
+  margin-bottom: 5px;
+  padding-top: 15px;
+}
+.form-control{
+  width: 100%;
+}
+.form-signin {
+  width: 80%;
+  padding: 15px;
+  margin: auto;
+  margin: 100px 0 0 30px;
+}
+.div21{
+  margin-top: 100px;
+  /* height: 600px; */
+  /* width: 710px; */
+  background-color: white;
+}
+.form-register{
+  width: 100%;
+  padding: 15px;
+  /* margin-left: 30px; */
 }
