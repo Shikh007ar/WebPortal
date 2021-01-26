@@ -3,13 +3,30 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const encrypt = require("mongoose-encryption");
+// const encrypt = require("mongoose-encryption");
+// const md5 = require("md5");
+// const bcrypt = require("bcrypt");
+// const saltRounds = 10;
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require("mongoose-findOrCreate");
 
 mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.set("useCreateIndex", true);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 const reviewSchema = new mongoose.Schema({
@@ -93,13 +110,60 @@ app.get("/loginORsignup", function(req, res){
 const userDetail = new mongoose.Schema({
   name: String,
   lname: String,
-  email: String,
-  password: String
+  username: String,
+  password: String,
+  googleId: String
 });
+userDetail.plugin(passportLocalMongoose, {
+  selectFields: 'username name lname'
+});
+userDetail.plugin(findOrCreate);
 
-userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
+// userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
 
 const Detail = new mongoose.model("Detail", userDetail);
+
+passport.use(Detail.createStrategy());
+// passport.use('local-signup', new LocalStrategy({usernameField: "username", passwordField: "password", passReqToCallback : true },
+//   function(req, username, password, done){
+//     var firstname = req.body.first;
+//     var lastname = req.body.last;
+//   }
+// ));
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  Detail.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/portal",
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    // console.log(profile);
+    Detail.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+
+app.get('/auth/google',
+  passport.authenticate("google", { scope: ["profile"] })
+);
+app.get("/auth/google/portal",
+  passport.authenticate("google", { failureRedirect: '/loginORsignup' }),
+  function(req, res) {
+    // Successful authentication, redirect to portal
+    res.redirect("/portal");
+  });
+
 const user1 = new Detail({
   name: "Shikhar",
   lname: "Chauhan",
@@ -107,34 +171,50 @@ const user1 = new Detail({
   password: "hello"
 });
 // user1.save();
-app.post("/login", function(req, res){
-  let username= req.body.username;
-  let password = req.body.password;
-  Detail.findOne({email: username}, function(err, foundUser){
-    if(err) console.log(err);
-    else{
-      if(foundUser){
-        if(foundUser.password === password){
-          res.render("portal");
-        }else console.log("password not matching!");
-      }else console.log("You are currently not registered.");
+app.get("/register", function(req, res){
+  res.render("register");
+});
+app.get("/portal", function(req, res){
+  if(req.isAuthenticated()) res.render("portal");
+  else res.redirect("/loginORsignup");
+});
+app.post("/logout", function(req, res){
+  req.logout();
+  res.redirect("/loginORsignup");
+});
+
+ // {firstname: req.body.first, lastname: req.body.last, username: req.body.username }
+app.post("/register", function(req, res){
+  Detail.register( new Detail({username: req.body.username, name: req.body.first, lname: req.body.last}), req.body.password, function(err, detail){
+    if(err){
+      console.log(err);
+      res.redirect("/register");
+    }else{
+      passport.authenticate("local")(req, res, function(){
+        console.log("Registered");
+        res.redirect("/portal");
+      })
     }
   })
 });
 
-app.get("/register", function(req, res){
-  res.render("register");
-});
-app.post("/register", function(req, res){
-  const addUser = new Detail({
-    name: req.body.first,
-    lname: req.body.last,
-    email: req.body.username,
+app.post("/login", function(req, res){
+  const user = new Detail({
+    username: req.body.username,
     password: req.body.password
   });
-  addUser.save();
-  res.render("loginORsignup");
+  req.login(user, function(err){
+    if(err) console.log(err);
+    else{
+      passport.authenticate("local")(req, res, function(){
+        console.log("Logged In");
+        res.redirect("/portal");
+      });
+    }
+  })
 });
+
+
 
 
 
