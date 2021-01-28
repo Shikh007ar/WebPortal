@@ -13,6 +13,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findOrCreate");
+const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
 mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set("useCreateIndex", true);
@@ -112,7 +113,9 @@ const userDetail = new mongoose.Schema({
   lname: String,
   username: String,
   password: String,
-  googleId: String
+  googleId: String,
+  githubId: String,
+  blogging: String
 });
 userDetail.plugin(passportLocalMongoose, {
   selectFields: 'username name lname'
@@ -140,6 +143,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// for google authentication
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
@@ -153,7 +157,22 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
+// for github authentication
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/github/portal"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    Detail.findOrCreate({ githubId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
+));
 
+
+// routes for google authentication
 app.get('/auth/google',
   passport.authenticate("google", { scope: ["profile"] })
 );
@@ -164,10 +183,24 @@ app.get("/auth/google/portal",
     res.redirect("/portal");
   });
 
+
+// routes for google authentication
+app.get('/auth/github',
+  passport.authenticate('github', { scope: [ "profile" ] })
+);
+app.get('/auth/github/portal',
+  passport.authenticate('github', { failureRedirect: '/loginORsignup' }),
+  function(req, res) {
+    // Successful authentication, redirect to portal.
+    res.redirect('/portal');
+  });
+
+
+
 const user1 = new Detail({
-  name: "Shikhar",
+  name: "Rahul",
   lname: "Chauhan",
-  email: "shikharchauhan07@gmail.com",
+  email: "rahulchauhan07@gmail.com",
   password: "hello"
 });
 // user1.save();
@@ -214,9 +247,41 @@ app.post("/login", function(req, res){
   })
 });
 
-
-
-
+// blog sectionn----------------------
+app.get("/blog", function(req, res){
+  Detail.find({"blogging": {$ne: null}}, function(err, blogUser){
+    if(err) console.log(err);
+    else{
+      if(blogUser){
+        res.render("blog", {blogName: blogUser });
+      }
+    }
+  });
+});
+app.get("/writingblog", function(req, res){
+  if(req.isAuthenticated()){
+    res.render("writingblog", {userName: req.user.name});
+  }else{
+    res.render("loginORsignup");
+  }
+});
+app.post("/writingblog", function(req, res){
+  console.log(req.user.name);
+  const writtenblog = req.body.blogData;
+  Detail.findById(req.user.id, function(err, foundUser){
+    if(err) console.log(err);
+    else{
+      if(foundUser){
+        console.log(req.body.blogData);
+        console.log(foundUser);
+        foundUser.blogging = writtenblog;
+        foundUser.save(function(){
+          res.redirect("/blog");
+        });
+      }
+    }
+  })
+})
 
 app.listen(3000, function(){
   console.log("server is running on port 3000");
