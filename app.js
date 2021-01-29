@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
 // const encrypt = require("mongoose-encryption");
 // const md5 = require("md5");
 // const bcrypt = require("bcrypt");
@@ -108,6 +110,9 @@ app.post("/delete", function(req, res){
 app.get("/loginORsignup", function(req, res){
   res.render("loginORsignup");
 })
+const userPhoto = new mongoose.Schema({
+  filename: String
+});
 const userDetail = new mongoose.Schema({
   name: String,
   lname: String,
@@ -115,15 +120,20 @@ const userDetail = new mongoose.Schema({
   password: String,
   googleId: String,
   githubId: String,
-  blogging: String
+  blogging: {
+    blogged: String,
+    bloggedDate: String,
+    bloggedTime: String
+  },
+  imagename: String
 });
 userDetail.plugin(passportLocalMongoose, {
-  selectFields: 'username name lname'
+  selectFields: 'username name lname imagename'
 });
 userDetail.plugin(findOrCreate);
 
 // userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
-
+const Upload = new mongoose.model("Upload", userPhoto);
 const Detail = new mongoose.model("Detail", userDetail);
 
 passport.use(Detail.createStrategy());
@@ -216,9 +226,30 @@ app.post("/logout", function(req, res){
   res.redirect("/loginORsignup");
 });
 
- // {firstname: req.body.first, lastname: req.body.last, username: req.body.username }
-app.post("/register", function(req, res){
-  Detail.register( new Detail({username: req.body.username, name: req.body.first, lname: req.body.last}), req.body.password, function(err, detail){
+ const Storage = multer.diskStorage({
+   destination: "./public/uploads/",
+   filename: (req, file, cb) => {
+     cb(null, file.fieldname+"_"+Date.now()+path.extname(file.originalname));
+   }
+ });
+ // +path.extname(inpFile.originalname)
+ const upload = multer({ storage: Storage }).single("inpFile");
+ // app.post("/register", upload, function(req, res, next){
+ //   const imagefile = req.file.filename;
+ //   const imageDetails = new Upload({
+ //     filename: imagefile
+ //   });
+ //   imageDetails.save();
+ // });
+
+
+app.post("/register", upload,  function(req, res, next){
+  // const imagefile = req.inpFile.filename;
+  // const imageDetails = new Upload({
+  //   filename: imagefile
+  // });
+  // imageDetails.save();
+  Detail.register( new Detail({username: req.body.username, name: req.body.first, lname: req.body.last, imagename: req.file.filename}), req.body.password, function(err, detail){
     if(err){
       console.log(err);
       res.redirect("/register");
@@ -272,9 +303,13 @@ app.post("/writingblog", function(req, res){
     if(err) console.log(err);
     else{
       if(foundUser){
-        console.log(req.body.blogData);
-        console.log(foundUser);
-        foundUser.blogging = writtenblog;
+        // console.log(req.body.blogData);
+        // console.log(foundUser);
+        let date = new Date().toDateString();
+        let time =new Date().toLocaleTimeString();
+        foundUser.blogging.blogged = writtenblog;
+        foundUser.blogging.bloggedDate = date;
+        foundUser.blogging.bloggedTime = time;
         foundUser.save(function(){
           res.redirect("/blog");
         });

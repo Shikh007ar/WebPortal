@@ -4,7 +4,7 @@
 <div class="div21 container" style="box-shadow: 0px 5px 20px -8px #917d91;">
   <div class="row">
     <div class="col-lg-6">
-      <form action="/register" class="form-register" method="POST">
+      <form action="/register" class="form-register" method="POST" enctype="multipart/form-data">
 
         <p style="margin-top: 50px;" class="paragraph">Registration of your portal</p>
         <div class="image-preview" id="imagePreview">
@@ -20,7 +20,7 @@
         <p class="Label">Password</p>
         <input type="password" name="password" class="form-control bottom" placeholder="**********" required>
         <p class="Label">Upload image:-</p>
-        <input type="file" name="inpFile" id="inpFile" accept="image/*"><br>
+        <input type="file" name="inpFile" id="inpFile" accept="image/*" required><br>
         <!-- <div class="image-preview" id="imagePreview">
           <img class="image-preview__image" src="" alt="Image Preview">
           <span class="image-preview__default-text">Upload Image</span>

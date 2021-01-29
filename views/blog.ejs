@@ -9,11 +9,12 @@
       <div class="row" style="padding-left:20px; padding-right: 20px; margin-top: 20px;">
 
         <div class="col-lg-3 col-sm-3"  style="text-align: center;">
-          <img class="blog-image" src="images/lady-img.jpg" alt="lady-profile">
+          <img class="blog-image" src="uploads/<%=user.imagename%>" alt="lady-profile">
         </div>
         <div class="col-lg-9 col-sm-9">
           <h4 class="blogName"><%= user.name %></h4>
-          <p class="blogContent"><%= user.blogging %></p>
+          <p class="blogTimes"><%= user.blogging.bloggedDate %> @ <%= user.blogging.bloggedTime %></p>
+          <p><%= user.blogging.blogged %></p>
         </div>
 
       </div>

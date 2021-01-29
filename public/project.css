@@ -1039,6 +1039,10 @@ svg#curve {
   margin-top: 15px;
   font-family: 'Nanum Gothic', sans-serif;
 }
+.blogTimes{
+  color: #999b84;
+  font-family: 'Quicksand', sans-serif;
+}
 @media(max-width: 893px){
   .blog-image{
     width: 60%;
