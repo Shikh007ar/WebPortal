@@ -361,12 +361,33 @@ a.top:hover {
  }
 
 .testimonial-image {
+  position: relative;
   width: 35%;
-  border-radius: 100%;
+  border-radius: 50%;
   margin: 20px;
-  filter: grayscale(60%);
+  height: 100px;
+  filter: grayscale(20%);
   border: 3px solid #e8eae6;
 }
+.testimonial-imageR {
+  position: relative;
+  width: 100px;
+  border-radius: 50%;
+  margin: 20px;
+  height: 100px;
+  filter: grayscale(20%);
+  border: 3px solid #e8eae6;
+}
+/* .blog-image {
+  position: relative;
+  width: 35%;
+  border-radius: 30%;
+  margin: 20px;
+  margin-top: 0px;
+  filter: grayscale(20%);
+  border: 3px solid #e8eae6;
+  left: 80px;
+} */
 .arrow {
   border: solid black;
   border-width: 0 3px 3px 0;
@@ -1028,7 +1049,7 @@ svg#curve {
   border-radius: 30%;
   margin: 20px;
   margin-top: 0px;
-  filter: grayscale(60%);
+  filter: grayscale(20%);
   border: 3px solid #e8eae6;
   left: 80px;
 }

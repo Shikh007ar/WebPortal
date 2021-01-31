@@ -8,7 +8,11 @@
 
       <form class="col-lg-3 col-md-6 col-sm-12" style="text-align: center; width:250px;" action="/delete" method="post">
         <div>
-          <img class="testimonial-image" src="images/lady-img.jpg" alt="lady-profile">
+          <% if((userData[i].googleId !== "" && userData[i].googleId !== undefined) || (userData[i].githubId !== "" && userData[i].githubId !== undefined)){ %>
+          <img class="testimonial-image" src="<%= userData[i].imagename%>" alt="lady-profile">
+            <% } else { %>
+            <img class="testimonial-image" src="uploads/<%= userData[i].imagename%>" alt="lady-profile">
+          <%} %>
           <div style=" border-radius:5%; background-color: #e8eae6; height: 200px;">
             <p style="font-weight: bold ;padding-top: 10px;"> <%= userData[i].name %></p>
             <h6 class="testimonial-text"><%= userData[i].review %></h6>

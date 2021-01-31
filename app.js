@@ -11,6 +11,7 @@ const path = require('path');
 // const saltRounds = 10;
 const session = require("express-session");
 const passport = require("passport");
+const url = require("url");
 const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -31,6 +32,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+let foundPath;
 
 const reviewSchema = new mongoose.Schema({
   name: String,
@@ -53,66 +55,16 @@ let review = [item1, item2];
 
 
 
-
-app.get("/", function(request, response){
-  Review.find({}, function(err, foundReviews){
-    if(foundReviews.length===0){
-      Review.insertMany(review, function(err){
-        if(err) console.log(err);
-        else console.log("Data successfully updated!");
-      });
-      response.redirect("/");
-    } else response.render("project", {userData: foundReviews});
-
-  });
-
-});
-
-app.get("/allreviews", function(req, res){
-  Review.find({}, function(err, foundReviews){
-    res.render("allReviews", {userData: foundReviews});
-  });
-});
-
-
-
-app.get("/addreview", function(req,res){
-  res.render("addreview");
-});
-
-app.post("/", function(req, res){
-  // let object = {
-  //   name: req.body.userName,
-  //   userWrote: req.body.reviewData
-  // };
-  // review.push(object);
-  const addedReview = new Review({
-    name: req.body.userName,
-    review: req.body.reviewData
-  });
-  addedReview.save();
-  res.redirect("/");
-});
-app.post("/delete", function(req, res){
-  let clickedReview = req.body.button;
-  Review.findByIdAndRemove(clickedReview, function(err){
-    if(err) console.log(err);
-    else {
-      console.log("Data successfully Deleted!");
-      res.redirect("/");
-    }
-  });
-});
-
-
-
 // Here are all things related to login and signup Page
 app.get("/loginORsignup", function(req, res){
-  res.render("loginORsignup");
-})
-const userPhoto = new mongoose.Schema({
-  filename: String
+  foundPath = url.parse(req.url).pathname;
+  if(req.isAuthenticated()) res.render("portal");
+  else {
+    res.render("loginORsignup");
+  }
+
 });
+
 const userDetail = new mongoose.Schema({
   name: String,
   lname: String,
@@ -125,7 +77,8 @@ const userDetail = new mongoose.Schema({
     bloggedDate: String,
     bloggedTime: String
   },
-  imagename: String
+  imagename: String,
+  review: String
 });
 userDetail.plugin(passportLocalMongoose, {
   selectFields: 'username name lname imagename'
@@ -133,7 +86,7 @@ userDetail.plugin(passportLocalMongoose, {
 userDetail.plugin(findOrCreate);
 
 // userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
-const Upload = new mongoose.model("Upload", userPhoto);
+// const Upload = new mongoose.model("Upload", userPhoto);
 const Detail = new mongoose.model("Detail", userDetail);
 
 passport.use(Detail.createStrategy());
@@ -153,6 +106,97 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+//every thing related to review section is Here
+
+
+
+
+app.get("/", function(request, response){
+  Detail.find({"review": {$ne: null}}, function(err, reviewUser){
+    if(err) console.log(err);
+    else{
+      if(reviewUser){
+        response.render("project", {userData: reviewUser });
+      }
+    }
+  });
+  // Review.find({}, function(err, foundReviews){
+  //   if(foundReviews.length===0){
+  //     Review.insertMany(review, function(err){
+  //       if(err) console.log(err);
+  //       else console.log("Data successfully updated!");
+  //     });
+  //     response.redirect("/");
+  //   } else response.render("project", {userData: foundReviews});
+  //
+  // });
+
+});
+
+app.get("/allreviews", function(req, res){
+  Detail.find({"review": {$ne: null}}, function(err, reviewUser){
+    if(err) console.log(err);
+    else{
+      if(reviewUser){
+        res.render("allReviews", {userData: reviewUser });
+      }
+    }
+  });
+  // Review.find({}, function(err, foundReviews){
+  //   res.render("allReviews", {userData: foundReviews});
+  // });
+});
+
+
+
+app.get("/addreview", function(req,res){
+  foundPath = url.parse(req.url).pathname;
+  if(req.isAuthenticated()) res.render("addreview", {userFirst: req.user.name, userLast: req.user.lname});
+  else{
+    res.render("loginORsignup");
+  }
+
+});
+
+app.post("/addreview", function(req, res){
+  // console.log(req.user.id);
+  Detail.findById(req.user.id, function(err, foundUser){
+    if(err) console.log(err);
+    else{
+      if(foundUser){
+        // console.log(foundUser);
+        foundUser.review = req.body.reviewData;
+        foundUser.save(function(){
+          res.redirect("/");
+        });
+      }
+    }
+  });
+  // const addedReview = new Review({
+  //   name: req.body.userName,
+  //   review: req.body.reviewData
+  // });
+  // addedReview.save();
+  // res.redirect("/");
+});
+app.post("/delete", function(req, res){
+  let clickedReview = req.body.button;
+  Review.findByIdAndRemove(clickedReview, function(err){
+    if(err) console.log(err);
+    else {
+      console.log("Data successfully Deleted!");
+      res.redirect("/");
+    }
+  });
+});
+
+
+
+
+
+
+
+
 // for google authentication
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -162,7 +206,7 @@ passport.use(new GoogleStrategy({
   },
   function(accessToken, refreshToken, profile, cb) {
     // console.log(profile);
-    Detail.findOrCreate({ googleId: profile.id }, function (err, user) {
+    Detail.findOrCreate({ googleId: profile.id, name: profile.name.givenName, lname: profile.name.familyName, imagename: profile.photos[0].value }, function (err, user) {
       return cb(err, user);
     });
   }
@@ -174,8 +218,8 @@ passport.use(new GitHubStrategy({
     callbackURL: "http://localhost:3000/auth/github/portal"
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
-    Detail.findOrCreate({ githubId: profile.id }, function (err, user) {
+    // console.log(profile);
+    Detail.findOrCreate({ githubId: profile.id, name: profile.username, imagename: profile.photos[0].value  }, function (err, user) {
       return done(err, user);
     });
   }
@@ -194,7 +238,7 @@ app.get("/auth/google/portal",
   });
 
 
-// routes for google authentication
+// routes for github authentication
 app.get('/auth/github',
   passport.authenticate('github', { scope: [ "profile" ] })
 );
@@ -263,6 +307,7 @@ app.post("/register", upload,  function(req, res, next){
 });
 
 app.post("/login", function(req, res){
+
   const user = new Detail({
     username: req.body.username,
     password: req.body.password
@@ -272,7 +317,10 @@ app.post("/login", function(req, res){
     else{
       passport.authenticate("local")(req, res, function(){
         console.log("Logged In");
-        res.redirect("/portal");
+        if(foundPath === "/loginORsignup") res.redirect("/portal");
+        else{
+          res.redirect(foundPath);
+        }
       });
     }
   })
@@ -284,16 +332,19 @@ app.get("/blog", function(req, res){
     if(err) console.log(err);
     else{
       if(blogUser){
+
         res.render("blog", {blogName: blogUser });
       }
     }
   });
 });
 app.get("/writingblog", function(req, res){
+  foundPath = url.parse(req.url).pathname;
   if(req.isAuthenticated()){
-    res.render("writingblog", {userName: req.user.name});
+    res.render("writingblog", {userNameF: req.user.name, userNameL: req.user.lname});
   }else{
     res.render("loginORsignup");
+
   }
 });
 app.post("/writingblog", function(req, res){
