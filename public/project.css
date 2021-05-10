@@ -1076,3 +1076,46 @@ svg#curve {
     left: 20px;
   }
 }
+
+
+
+/* all css of portal is here */
+
+#bg-dark{
+    background-color: #1d2d50;
+}
+.details{
+  text-align: center;
+  font-weight: bold;   
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+}
+#portalTop:hover{
+  color: #ffc93c;
+  transition-duration: 1s;
+}
+.portalImg{
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  margin: auto;
+  /* filter: grayscale(30%); */
+  margin-top: 10px;
+}
+@media(max-width: 995px){
+  .portalImg{
+    height: 120px;
+    width: 120px;
+  }
+}
+@media(max-width: 750px){
+  .portalImg{
+    height: 200px;
+  width: 200px;
+  }
+}
+.featureButton{
+  background-color:  #1f4068; 
+  color: white; 
+  font-weight: bold;
+}

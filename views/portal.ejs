@@ -1,11 +1,74 @@
-<%- include("partials/header") -%>
-
-<div>
-  <h1>Hello everyone</h1>
-</div>
-<form class="" action="/logout" method="post">
-  <button type="submit" name="button">LOGOUT</button>
-</form>
+ <%- include("partials/userNav") -%>
+<%- include("partials/herdr") -%>
 
 
-<%- include("partials/footer") -%>
+<header id="main-header" style="background-color: #1d2d50;" class="py-2 text-white">
+  <div style="text-align: center;">
+    <h1><i class="fas fa-sticky-note"></i> Dashboard</h1>
+  </div>
+</header>
+
+ <section id="home" class="mt-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card">
+          <img src="uploads/<%=printData.imagename%>" class="portalImg  p-1" alt="...">
+          <div class="card-body">
+            <h3 class="details"><%=printData.name%> <%=printData.lname%></h3>
+            <!-- <p style="  text-align: center;    font-family: 'Poppins', sans-serif;">Email : <%=printData.username%></p> -->
+            <p class="details" >3rd</p>
+            
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        
+        <div class="card">
+          <div class="card-header text-center">
+            <h4>Recent Activities</h4>
+          </div>
+          <table class="table table-striped">
+            <thead class="thead-inverse">
+              <tr>
+                <th>Question Asked</th>
+                <!-- <th>Category</th> -->
+                <th>Date</th>
+                
+              </tr>
+              <tr>
+                <td>what you used to do during your summer holidays???</td>
+                <td>fuck yourself!!</td>
+              </tr>
+            </thead>
+            
+          </table>
+          <p class="addingClick">Want to ask a Question?<a class="addingReview" href=""> <i class="fas fa-edit fa-2x"></i> </a></p>
+
+          <table class="table table-striped">
+            <thead class="thead-inverse">
+              <tr>
+                <th>Question Answered</th>
+                <!-- <th>Category</th> -->
+                <th>Date</th>
+              </tr>
+              <tr>
+                <td>what you used to do during your summer holidays???</td>
+                <td>fuck yourself!!</td>
+              </tr>
+            </thead>
+          </table>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+ <%- include("partials/footer") -%>

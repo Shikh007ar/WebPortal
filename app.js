@@ -18,8 +18,14 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findOrCreate");
 const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
+
+
+
+
+
 mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set("useCreateIndex", true);
+mongoose.set('useFindAndModify', false);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -33,6 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 let foundPath;
+let user_id ,movie;
 
 const reviewSchema = new mongoose.Schema({
   name: String,
@@ -58,12 +65,18 @@ let review = [item1, item2];
 // Here are all things related to login and signup Page
 app.get("/loginORsignup", function(req, res){
   foundPath = url.parse(req.url).pathname;
-  if(req.isAuthenticated()) res.render("portal");
+  console.log(foundPath);
+  if(req.isAuthenticated()){
+    // const user_id = req. user._id;
+    // console.log(user_id);
+    res.render("portal", {printdata: movie});
+  } 
   else {
     res.render("loginORsignup");
   }
 
 });
+
 
 const userDetail = new mongoose.Schema({
   name: String,
@@ -120,6 +133,7 @@ app.get("/", function(request, response){
       }
     }
   });
+});
   // Review.find({}, function(err, foundReviews){
   //   if(foundReviews.length===0){
   //     Review.insertMany(review, function(err){
@@ -131,7 +145,9 @@ app.get("/", function(request, response){
   //
   // });
 
-});
+
+
+
 
 app.get("/allreviews", function(req, res){
   Detail.find({"review": {$ne: null}}, function(err, reviewUser){
@@ -262,7 +278,9 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 app.get("/portal", function(req, res){
-  if(req.isAuthenticated()) res.render("portal");
+  if(req.isAuthenticated()){
+    res.render("portal", {printData: movie});
+  } 
   else res.redirect("/loginORsignup");
 });
 app.post("/logout", function(req, res){
@@ -307,24 +325,41 @@ app.post("/register", upload,  function(req, res, next){
 });
 
 app.post("/login", function(req, res){
-
+ 
   const user = new Detail({
     username: req.body.username,
     password: req.body.password
   });
   req.login(user, function(err){
-    if(err) console.log(err);
+    if(err) {
+      console.log(err);
+    }
     else{
       passport.authenticate("local")(req, res, function(){
-        console.log("Logged In");
-        if(foundPath === "/loginORsignup") res.redirect("/portal");
+        user_id = req.user._id;
+        console.log(user_id);
+        async function run(){
+          try{
+            movie = await Detail.findOne({_id: user_id});
+            console.log(movie.username);
+            if(foundPath === "/loginORsignup") 
+
+             res.render("portal", {printData: movie });
         else{
           res.redirect(foundPath);
         }
+          } catch(error){
+            console.log(error);
+          }
+        }
+        run();
       });
     }
   })
 });
+
+
+
 
 // blog sectionn----------------------
 app.get("/blog", function(req, res){
@@ -369,6 +404,61 @@ app.post("/writingblog", function(req, res){
   })
 })
 
-app.listen(3000, function(){
-  console.log("server is running on port 3000");
+
+
+// visiting to profile part
+
+app.get("/profile", function(req, res){
+    res.render("uProfile", {printData: movie});
+});
+
+
+app.post("/changePassword", function(req, res){
+  const username = req.user.username;
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.password;
+  console.log(username, " ", oldPassword, " ", newPassword);
+  async function run(){
+    try{
+    const user = await Detail.findByUsername(username);
+    await user.changePassword(oldPassword, newPassword);
+    await user.save();
+    // req.flash("success", "Your password is recently updated. Please log in again to confirm");
+    req.logOut();
+    res.redirect("/loginORsignup");
+  } catch(err){
+    console.log(err);
+    res.redirect("back");
+  }
+}
+run();
+});
+
+
+
+app.post("/updateProfile", function(req, res){
+  async function run(){
+    try{
+      const userUpdateData = {
+        "name": req.body.firstName,
+        "lname": req.body.lastName,
+        "username": req.body.email
+      }
+      await Detail.findByIdAndUpdate(req.user._id, userUpdateData);
+      req.logOut();
+      res.redirect("/loginORsignup");
+    } catch(err){
+        console.log(err);
+        res.redirect("back");
+    }
+  }
+  run();
 })
+
+
+
+
+
+app.listen(3000, function(){
+  console.log("server is running on port 3000")
+});
