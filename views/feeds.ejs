@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feeds</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/14bf636678.js" crossorigin="anonymous"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@1,500&family=Arimo:ital@0;1&family=Quicksand:wght@300;400;500&family=Indie+Flower&family=Nanum+Gothic&family=Open+Sans+Condensed:wght@300&family=Open+Sans+Condensed:wght@300&family=Raleway:wght@300&family=Nunito+Sans:wght@600&family=Fredoka+One&family=Poppins:wght@500&family=Lato:ital@1&family=Permanent+Marker&family=Kufam:ital,wght@1,500&family=Grandstander:ital@1&family=Hachi+Maru+Pop&family=Pacifico&family=Rubik:wght@500&display=swap"
+      rel="stylesheet">
+  
+    <link rel="stylesheet" href="bootstrap-social.css">
+    <link rel="stylesheet" href="project.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+   
+</head>
+<body>
+    
+
+
+    <%- include("partials/userNav") -%>
+
+
+
+    <div class="container" style="margin-top: 50px;">
+
+        
+            <% for(var i=0; i<allqus.length; i++){ %>
+                <div class="row">
+                    <div>
+                        <img class="feedImage" src="uploads/<%=allqus[i].img%>" alt="img">
+                    </div>
+                    <div style="margin: auto 0; margin-left: 10px">
+                        <div>
+                            <h5 style="font-family: 'Poppins', sans-serif;"><%- allqus[i].N %></h5>
+                        </div>
+                        <div>
+                            <p style="font-family: 'Poppins', sans-serif;"><%- allqus[i].T %> <%- allqus[i].D %></p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3><%- allqus[i].Q %></h3>
+                </div>
+            <% } %>
+           
+        
+
+
+        
+        
+
+
+
+    </div>
+
+
+
+<%- include("partials/footer") -%>

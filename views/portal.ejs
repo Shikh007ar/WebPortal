@@ -32,18 +32,25 @@
             <thead class="thead-inverse">
               <tr>
                 <th>Question Asked</th>
-                <!-- <th>Category</th> -->
                 <th>Date</th>
+              </tr>
+              
+                <% if(printData.questionAsked!==undefined){ %>
+                  <% for(var i=0; i<printData.questionAsked.length; i++){ %>
+                    <tr>
+                    <td><%= printData.questionAsked[i].Question %></td>
+                    <td><%= printData.questionAsked[i].Time %></td>
+                  </tr>
+                  <% } %>
+                <% } %>
                 
-              </tr>
-              <tr>
-                <td>what you used to do during your summer holidays???</td>
-                <td>fuck yourself!!</td>
-              </tr>
+               
+                
+              
             </thead>
             
           </table>
-          <p class="addingClick">Want to ask a Question?<a class="addingReview" href=""> <i class="fas fa-edit fa-2x"></i> </a></p>
+          <p class="addingClick">Want to ask a Question?<a class="addingReview" href="askingQus"> <i class="fas fa-edit fa-2x"></i> </a></p>
 
           <table class="table table-striped">
             <thead class="thead-inverse">

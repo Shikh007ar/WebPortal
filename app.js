@@ -7,7 +7,7 @@ const multer = require('multer');
 const path = require('path');
 // const encrypt = require("mongoose-encryption");
 // const md5 = require("md5");
-// const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt"); 
 // const saltRounds = 10;
 const session = require("express-session");
 const passport = require("passport");
@@ -19,7 +19,7 @@ const findOrCreate = require("mongoose-findOrCreate");
 const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
 
-
+ 
 
 
 
@@ -77,7 +77,14 @@ app.get("/loginORsignup", function(req, res){
 
 });
 
-
+const questions = new mongoose.Schema({ 
+  Q: String,
+  T: String,
+  D: String,
+  img: String,
+  N: String
+})
+const Qus = new mongoose.model("question", questions);
 const userDetail = new mongoose.Schema({
   name: String,
   lname: String,
@@ -91,7 +98,8 @@ const userDetail = new mongoose.Schema({
     bloggedTime: String
   },
   imagename: String,
-  review: String
+  review: String,
+  questionAsked: [{ Question: String, Time: String }]
 });
 userDetail.plugin(passportLocalMongoose, {
   selectFields: 'username name lname imagename'
@@ -250,6 +258,8 @@ app.get("/auth/google/portal",
   passport.authenticate("google", { failureRedirect: '/loginORsignup' }),
   function(req, res) {
     // Successful authentication, redirect to portal
+    // console.log(req.user);
+    movie = req.user;
     res.redirect("/portal");
   });
 
@@ -279,6 +289,11 @@ app.get("/register", function(req, res){
 });
 app.get("/portal", function(req, res){
   if(req.isAuthenticated()){
+    console.log(req.user._id);
+    Detail.findById(req.user._id, function(err, doc){
+      if(err) console.log(err);
+      else movie = doc;
+    });
     res.render("portal", {printData: movie});
   } 
   else res.redirect("/loginORsignup");
@@ -404,7 +419,38 @@ app.post("/writingblog", function(req, res){
   })
 })
 
+app.get("/askingQus", function(req, res){
+  foundPath = url.parse(req.url).pathname;
+  if(req.isAuthenticated()){
+    res.render("askingQus", {userNameF: req.user.name, userNameL: req.user.lname});
+  }else{
+    res.render("loginORsignup");
 
+  }
+});
+app.post("/askingQus", function(req, res){
+  let date = new Date().toDateString();
+  let time =new Date().toLocaleTimeString();
+  const question = req.body.qusData;
+  const qus = new Qus({
+    Q: question,
+    T: time,
+    D: date,
+    img: req.user.imagename,
+    N: req.user.name + " " + req.user.lname
+  });
+  qus.save();
+  Detail.findByIdAndUpdate(req.user.id, 
+    {$push: {questionAsked: {Question: question, Time: date}}},
+    function(err, doc) {
+      if(err){
+      console.log(err);
+      }else{
+        res.redirect("/portal");
+      }
+  }
+  )
+})
 
 // visiting to profile part
 
@@ -454,6 +500,19 @@ app.post("/updateProfile", function(req, res){
   }
   run();
 })
+
+
+app.get("/feeds", function(req, res){
+  if(req.isAuthenticated()){
+    Qus.find({}, function(err, questn){
+      if(err) console.log(err);
+      else {
+        // console.log(questn);
+        res.render("feeds", {printData: movie, allqus: questn});
+      }
+    });
+  }else res.redirect("loginORsignup");
+});
 
 
 
