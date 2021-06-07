@@ -101,7 +101,7 @@ a.top:hover {
   margin: 0px 30px;
   margin-top: 40px;
   text-decoration: none;
-  transition-duration: 0.5s;
+  transition-duration: 0.5s; 
 }
 
 #Stop:hover {
@@ -897,7 +897,9 @@ svg#curve {
   #section6{
     position: relative;
     top: 580px;
+    bottom: 0;
     text-align: center;
+    width: 100%;
   }
   .last{
     background-color: #1a1718;
@@ -1118,4 +1120,17 @@ svg#curve {
   background-color:  #1f4068; 
   color: white; 
   font-weight: bold;
+}
+
+.feedImage{
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+}
+@media(max-width: 500px)
+{
+.feedImage{
+  width: 70px;
+  height: 70px;
+}
 }
