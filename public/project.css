@@ -938,7 +938,7 @@ svg#curve {
     margin-right: 15px;
   }
 }
-
+ 
 
 /* login page starting css->>>>>>>>>>>>>>>>>>>>>> */
 .div1{
@@ -1123,9 +1123,11 @@ svg#curve {
 }
 
 .feedImage{
-  width: 70px;
-  height: 70px;
+  height: 45px;
+  width: 10%;
   border-radius: 100%;
+  margin: auto;
+  border: 3px solid #EEEEEE;
 }
 @media(max-width: 500px)
 {

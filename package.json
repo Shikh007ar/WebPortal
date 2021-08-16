@@ -35,6 +35,7 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13"
   },
+  "noImplicitAny": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib"
