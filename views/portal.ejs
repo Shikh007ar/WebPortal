@@ -33,14 +33,16 @@
               <tr>
                 <th>Question Asked</th>
                 <th>Date</th>
+                <th>Time</th>
               </tr>
               
                 <% if(printData.questionAsked!==undefined){ %>
                   <% for(var i=0; i<printData.questionAsked.length; i++){ %>
                     <tr>
-                    <td><%= printData.questionAsked[i].Question %></td>
-                    <td><%= printData.questionAsked[i].Time %></td>
-                  </tr>
+                      <td><%= printData.questionAsked[i].Question %></td>
+                      <td><%= printData.questionAsked[i].time %></td>
+                      <td><%= printData.questionAsked[i].date %></td>
+                    </tr>
                   <% } %>
                 <% } %>
                 

@@ -67,8 +67,6 @@ app.get("/loginORsignup", function(req, res){
   foundPath = url.parse(req.url).pathname;
   console.log(foundPath);
   if(req.isAuthenticated()){
-    // const user_id = req. user._id;
-    // console.log(user_id);
     res.render("portal", {printdata: movie});
   } 
   else {
@@ -82,7 +80,8 @@ const questions = new mongoose.Schema({
   T: String,
   D: String,
   img: String,
-  N: String
+  N: String, 
+  A: [{thisAns: String}]
 })
 const Qus = new mongoose.model("question", questions);
 const userDetail = new mongoose.Schema({
@@ -99,7 +98,8 @@ const userDetail = new mongoose.Schema({
   },
   imagename: String,
   review: String,
-  questionAsked: [{ Question: String, Time: String }]
+  questionAsked: [{ Question: String, time: String, date: String}],
+  questionAnswered: [{ Question: String, time: String, date: String}]
 });
 userDetail.plugin(passportLocalMongoose, {
   selectFields: 'username name lname imagename'
@@ -357,13 +357,12 @@ app.post("/login", function(req, res){
           try{
             movie = await Detail.findOne({_id: user_id});
             console.log(movie.username);
-            if(foundPath === "/loginORsignup") 
-
-             res.render("portal", {printData: movie });
-        else{
-          res.redirect(foundPath);
-        }
-          } catch(error){
+            if(foundPath === "/loginORsignup") {
+              res.render("portal", {printData: movie});
+            }else{
+              res.redirect(foundPath);
+            }
+          }catch(error){
             console.log(error);
           }
         }
@@ -440,8 +439,9 @@ app.post("/askingQus", function(req, res){
     N: req.user.name + " " + req.user.lname
   });
   qus.save();
+  console.log(qus._id);
   Detail.findByIdAndUpdate(req.user.id, 
-    {$push: {questionAsked: {Question: question, Time: date}}},
+    {$push: {questionAsked: {Question: question, time: time, date: date}}},
     function(err, doc) {
       if(err){
       console.log(err);
@@ -451,6 +451,22 @@ app.post("/askingQus", function(req, res){
   }
   )
 })
+let clickedQus;
+app.get("/answering", function(req, res){
+  Qus.findById(clickedQus, function(err, finded){
+    if(err) console.log(err);
+    else{
+      res.render("answering", {ansQus: finded.Q});
+    }
+  })
+})
+app.post("/ansqus", function(req, res){
+  clickedQus = req.body.button;
+  res.redirect("/answering");
+})
+
+
+
 
 // visiting to profile part
 

@@ -1,0 +1,20 @@
+<%- include("partials/header") -%>
+
+<div class="container">
+  <div style="padding-top: 50px;" class="">
+    <form class="" action="/askingQus" method="post">
+      <h5 class="footerLines">Question:-</h5>
+      <h3> <%= ansQus %>  </h3>
+      <h5 class="footerLines" style="padding-top: 20px;">Answer this Question here:- </h5>
+      <textarea style="border-radius: 5px;" placeholder="Start to write!" name="qusData" rows="8" cols="60"></textarea><br>
+      <button style="margin-top: 10px;" class="Abutton" type="submit" name="button">Submit</button>
+    </form>
+  </div>
+
+</div>
+
+
+
+
+
+<%- include("partials/footer") -%>
