@@ -81,7 +81,7 @@ const questions = new mongoose.Schema({
   D: String,
   img: String,
   N: String, 
-  A: [{thisAns: String}]
+  A: [{ansDate: String, ansTime: String, ansName: String, ansImg: String, thisAns: String}]
 })
 const Qus = new mongoose.model("question", questions);
 const userDetail = new mongoose.Schema({
@@ -452,19 +452,46 @@ app.post("/askingQus", function(req, res){
   )
 })
 let clickedQus;
-app.get("/answering", function(req, res){
-  Qus.findById(clickedQus, function(err, finded){
+// app.get("/answering", function(req, res){
+//   if(req.isAuthenticated()){
+//     res.render("answering");
+//   }else{
+//     res.redirect("/loginOrSignup");
+//   }
+// })
+app.post("/answering", function(req, res){
+  clickedQus = req.body.button;
+  console.log(clickedQus);
+  Qus.findById(clickedQus, function(err, found){
+    if(err) console.log(err);
+    else res.render("answering", {ansQus: found.Q})
+  })
+})
+
+app.post("/ansQus", function(req, res){
+  var date = new Date().toDateString();;
+  var time = new Date().toLocaleTimeString();
+  // console.log(req.body.qusData);
+  // console.log(clickedQus);
+  Qus.findByIdAndUpdate(clickedQus, 
+    {$push: {A: {ansDate: date, ansTime: time, ansName: req.user.name +" "+ req.user.lname, ansImg: req.user.imagename, thisAns: req.body.qusData }}},
+    function(err, doc){
+      if(err) console.log(err);
+      else res.redirect("/feeds");
+    }
+  )
+  
+})
+
+app.post("/allAnswers", function(req, res){
+  clickedQus = req.body.Abutton;
+  Qus.findById(clickedQus, function(err, fd){
     if(err) console.log(err);
     else{
-      res.render("answering", {ansQus: finded.Q});
+      res.render("allAnswers", {allAns: fd.A, qusAnswered: fd.Q, printData: movie});
     }
   })
 })
-app.post("/ansqus", function(req, res){
-  clickedQus = req.body.button;
-  res.redirect("/answering");
-})
-
 
 
 
