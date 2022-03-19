@@ -41,5 +41,8 @@
     "build": "babel src -d lib"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": "12.16.3"
+  }
 }
