@@ -126,6 +126,29 @@
   </div>
 
 
+  <!--Change Photo Modal-->
+<div class="modal fade" id="changePhotoModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div style="background-color:  #1f4068;" class="modal-header text-white">
+        <h5 class="modal-title" id="passwordModalLabel">
+          Change Photo
+        </h5>
+        <button class="close" data-dismiss="modal" ><span>&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/updateProfilePhoto" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="photo" class="form-control-label">Change Photo</label><br>
+            <input type="file" name="inpFile" id="inpFile" accept="image/*">
+          </div>
+           <input style="background-color:  #1f4068;" type="submit" class="btn btn-sm btn-primary m-2" value="Submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
   <script>

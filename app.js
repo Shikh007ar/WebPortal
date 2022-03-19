@@ -18,12 +18,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findOrCreate");
 const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
-
+ 
  
 
 
 
-mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb+srv://shikharchauhan:txDnRMzpEvORIF1C@websitedata.hymwg.mongodb.net/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set("useCreateIndex", true);
 mongoose.set('useFindAndModify', false);
 
@@ -46,8 +46,8 @@ const reviewSchema = new mongoose.Schema({
   review: {
     type: String,
     required: [true, "Please enter the review section in your data!"]
-  }
-});
+  }  
+}); 
 const Review = new mongoose.model("Review", reviewSchema);
 const item1 = new Review({
   name: "vannsh,Sharanpur",
@@ -544,6 +544,62 @@ app.post("/updateProfile", function(req, res){
   run();
 })
 
+app.post ("/updateProfilePhoto", function(req, res) {
+  async function run() {
+  try {
+      const user_id = req.user._id;
+      const user = await Detail.findById(user_id);
+      let imageUrl;
+      console.log(req.file);
+      if(req.file) {
+          imageUrl = `${uid()}__${req.file.originalname}`;
+          console.log(imageUrl);
+          let filename = `images/${imageUrl}`;
+          let previousImagePath = user.imagename;
+
+          const imageExist = fs.existsSync(previousImagePath);
+          if(imageExist){
+            fs.unlink(previousImagePath, (err) => {
+              if (err) {
+                console.log("Failed to delete image at delete profile");
+                
+              }
+            });
+          }
+          await sharp(req.file.path)
+              .toFile(filename);
+          
+          fs.unlink(req.file.path, (err) => {
+              if(err) {
+                  console.log(err);
+              }
+          })
+      } else {
+          imageUrl = previousImagePath;
+      }
+      
+      user.imagename = imageUrl;
+      console.log(imageUrl);
+      await user.save();
+      
+      // const activity = new Activity({
+      //     category : "Upload Photo",
+      //     user_id : {
+      //       id : req.user._id,
+      //       username: user.username,
+      //      }
+      // });
+      // await activity.save();
+      
+      res.redirect("/profile");
+  } catch(err) {
+      console.log(err);
+      res.redirect("/portal");
+  }
+}
+run();
+})
+
 
 app.get("/feeds", function(req, res){
   if(req.isAuthenticated()){
@@ -564,3 +620,6 @@ app.get("/feeds", function(req, res){
 app.listen(3000, function(){
   console.log("server is running on port 3000")
 });
+
+// shikharchauhan
+// Shikhar#123
