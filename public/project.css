@@ -483,6 +483,18 @@ a.top:hover {
   height: auto;
   margin: 0 auto;
 }
+.cardE{
+  border: 0.5px solid white;
+    height: 350px;
+    width: 260px;
+    background-image: url("./images/MentorSir.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    filter: grayscale(1);
+    margin: 10px;
+    margin: auto;
+}
 .card1 {
     border: 0.5px solid white;
     height: 350px;
@@ -539,7 +551,7 @@ a.top:hover {
     opacity: 0;
     transition: opacity 0.15s ease-in;
 }
-.card1:hover .card-blur, .card2:hover .card-blur, .card3:hover .card-blur, .card4:hover .card-blur {
+.card1:hover .card-blur, .card2:hover .card-blur, .card3:hover .card-blur, .card4:hover .card-blur, .cardE:hover .card-blur {
     opacity: 0.6;
 }
 .footer {
@@ -575,7 +587,7 @@ svg#curve {
     transform: translateY(200px);
     transition: transform 1s cubic-bezier(.46, 1.48, .18, .81);
 }
-.card1:hover .connection, .card2:hover .connection , .card3:hover .connection , .card4:hover .connection {
+.card1:hover .connection, .card2:hover .connection , .card3:hover .connection , .card4:hover .connection, .cardE:hover .connection{
     transform: translateY(0px);
 }
 .connection.linkedInn {
@@ -604,7 +616,7 @@ svg#curve {
     transition: transform 1s cubic-bezier(.31,1.21,.64,1.02);
     margin-top: -10px;
 }
-.card1:hover .info, .card2:hover .info, .card3:hover .info, .card4:hover .info {
+.card1:hover .info, .card2:hover .info, .card3:hover .info, .card4:hover .info, .cardE:hover .info {
     transform: translateY(0px);
 }
 .name {
@@ -620,9 +632,10 @@ svg#curve {
   color: white;
 }
  @media(max-width: 1090px){
-  .card1, .card2, .card3, .card4{
+  .card1, .card2, .card3, .card4, .cardE{
     height: 300px;
     width: 210px;
+    margin-top: 30px;
   }
 }
 @media(max-width: 1000px){
@@ -658,7 +671,7 @@ svg#curve {
       font-size: 15px;
       margin-top: 30px;
     }
-  .card1, .card2, .card3, .card4{
+  .card1, .card2, .card3, .card4, .cardE{
     height: 250px;
     width: 160px;
   }
@@ -667,7 +680,7 @@ svg#curve {
   #teamS{
     width: 70%;
   }
-  .card1, .card2, .card3, .card4{
+  .card1, .card2, .card3, .card4, .cardE{
     height: 250px;
     width: 160px;
     margin-bottom: 20px;
@@ -698,7 +711,7 @@ svg#curve {
   .job{
     margin-top: 10px;
   }
-  .card1, .card2, .card3, .card4{
+  .card1, .card2, .card3, .card4, .cardE{
     height: 350px;
     width: 260px;
   }

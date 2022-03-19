@@ -18,12 +18,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findOrCreate");
 const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
-
+ 
  
 
 
 
-mongoose.connect('mongodb://localhost:27017/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb+srv://shikharchauhan:txDnRMzpEvORIF1C@websitedata.hymwg.mongodb.net/reviewDB', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set("useCreateIndex", true);
 mongoose.set('useFindAndModify', false);
 
@@ -46,8 +46,8 @@ const reviewSchema = new mongoose.Schema({
   review: {
     type: String,
     required: [true, "Please enter the review section in your data!"]
-  }
-});
+  }  
+}); 
 const Review = new mongoose.model("Review", reviewSchema);
 const item1 = new Review({
   name: "vannsh,Sharanpur",
@@ -81,7 +81,7 @@ const questions = new mongoose.Schema({
   D: String,
   img: String,
   N: String, 
-  A: [{thisAns: String}]
+  A: [{ansDate: String, ansTime: String, ansName: String, ansImg: String, thisAns: String}]
 })
 const Qus = new mongoose.model("question", questions);
 const userDetail = new mongoose.Schema({
@@ -452,19 +452,46 @@ app.post("/askingQus", function(req, res){
   )
 })
 let clickedQus;
-app.get("/answering", function(req, res){
-  Qus.findById(clickedQus, function(err, finded){
+// app.get("/answering", function(req, res){
+//   if(req.isAuthenticated()){
+//     res.render("answering");
+//   }else{
+//     res.redirect("/loginOrSignup");
+//   }
+// })
+app.post("/answering", function(req, res){
+  clickedQus = req.body.button;
+  console.log(clickedQus);
+  Qus.findById(clickedQus, function(err, found){
+    if(err) console.log(err);
+    else res.render("answering", {ansQus: found.Q})
+  })
+})
+
+app.post("/ansQus", function(req, res){
+  var date = new Date().toDateString();;
+  var time = new Date().toLocaleTimeString();
+  // console.log(req.body.qusData);
+  // console.log(clickedQus);
+  Qus.findByIdAndUpdate(clickedQus, 
+    {$push: {A: {ansDate: date, ansTime: time, ansName: req.user.name +" "+ req.user.lname, ansImg: req.user.imagename, thisAns: req.body.qusData }}},
+    function(err, doc){
+      if(err) console.log(err);
+      else res.redirect("/feeds");
+    }
+  )
+  
+})
+
+app.post("/allAnswers", function(req, res){
+  clickedQus = req.body.Abutton;
+  Qus.findById(clickedQus, function(err, fd){
     if(err) console.log(err);
     else{
-      res.render("answering", {ansQus: finded.Q});
+      res.render("allAnswers", {allAns: fd.A, qusAnswered: fd.Q, printData: movie});
     }
   })
 })
-app.post("/ansqus", function(req, res){
-  clickedQus = req.body.button;
-  res.redirect("/answering");
-})
-
 
 
 
@@ -517,6 +544,62 @@ app.post("/updateProfile", function(req, res){
   run();
 })
 
+app.post ("/updateProfilePhoto", function(req, res) {
+  async function run() {
+  try {
+      const user_id = req.user._id;
+      const user = await Detail.findById(user_id);
+      let imageUrl;
+      console.log(req.file);
+      if(req.file) {
+          imageUrl = `${uid()}__${req.file.originalname}`;
+          console.log(imageUrl);
+          let filename = `images/${imageUrl}`;
+          let previousImagePath = user.imagename;
+
+          const imageExist = fs.existsSync(previousImagePath);
+          if(imageExist){
+            fs.unlink(previousImagePath, (err) => {
+              if (err) {
+                console.log("Failed to delete image at delete profile");
+                
+              }
+            });
+          }
+          await sharp(req.file.path)
+              .toFile(filename);
+          
+          fs.unlink(req.file.path, (err) => {
+              if(err) {
+                  console.log(err);
+              }
+          })
+      } else {
+          imageUrl = previousImagePath;
+      }
+      
+      user.imagename = imageUrl;
+      console.log(imageUrl);
+      await user.save();
+      
+      // const activity = new Activity({
+      //     category : "Upload Photo",
+      //     user_id : {
+      //       id : req.user._id,
+      //       username: user.username,
+      //      }
+      // });
+      // await activity.save();
+      
+      res.redirect("/profile");
+  } catch(err) {
+      console.log(err);
+      res.redirect("/portal");
+  }
+}
+run();
+})
+
 
 app.get("/feeds", function(req, res){
   if(req.isAuthenticated()){
@@ -537,3 +620,6 @@ app.get("/feeds", function(req, res){
 app.listen(3000, function(){
   console.log("server is running on port 3000")
 });
+
+// shikharchauhan
+// Shikhar#123
