@@ -12,10 +12,10 @@ const path = require('path');
 const session = require("express-session");
 const passport = require("passport");
 const url = require("url");
+const findOrCreate = require("mongoose-find-or-create");
 const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const findOrCreate = require("mongoose-findOrCreate");
 const GitHubStrategy = require("Passport-GitHub2").Strategy;
 
  
@@ -229,7 +229,8 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
-    // console.log(profile);
+    console.log(profile);
+    
     Detail.findOrCreate({ googleId: profile.id, name: profile.name.givenName, lname: profile.name.familyName, imagename: profile.photos[0].value }, function (err, user) {
       return cb(err, user);
     });
