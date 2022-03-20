@@ -223,8 +223,8 @@ app.post("/delete", function(req, res){
 
 // for google authentication
 passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientID: '484441731657-stkm9r7nj49os1sqpog4m46r3jqfspin.apps.googleusercontent.com',
+    clientSecret: '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',
     callbackURL: "https://immense-tundra-23796.herokuapp.com/auth/google/portal",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
@@ -239,8 +239,8 @@ passport.use(new GoogleStrategy({
 ));
 // for github authentication
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    clientID: '24d6f3ee914122426b31',
+    clientSecret: '9f2b2f32800be14b8a695719483fb359bc9e708f',
     callbackURL: "https://immense-tundra-23796.herokuapp.com/auth/github/portal"
   },
   function(accessToken, refreshToken, profile, done) {
