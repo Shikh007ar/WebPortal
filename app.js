@@ -12,7 +12,7 @@ const path = require('path');
 const session = require("express-session");
 const passport = require("passport");
 const url = require("url");
-const findOrCreate = require("mongoose-find-or-create");
+//const findOrCreate = require("mongoose-findorcreate");
 const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -104,7 +104,7 @@ const userDetail = new mongoose.Schema({
 userDetail.plugin(passportLocalMongoose, {
   selectFields: 'username name lname imagename'
 });
-userDetail.plugin(findOrCreate);
+//userDetail.plugin(findOrCreate);
 
 // userDetail.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]});
 // const Upload = new mongoose.model("Upload", userPhoto);
@@ -225,9 +225,10 @@ app.post("/delete", function(req, res){
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/portal",
+    callbackURL: "https://immense-tundra-23796.herokuapp.com/auth/google/portal",
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
+  
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
     
@@ -240,7 +241,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/portal"
+    callbackURL: "https://immense-tundra-23796.herokuapp.com/auth/github/portal"
   },
   function(accessToken, refreshToken, profile, done) {
     // console.log(profile);
