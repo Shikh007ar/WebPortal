@@ -16,7 +16,7 @@ const url = require("url");
 const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require("Passport-GitHub2").Strategy;
+const GitHubStrategy = require("passport-github").Strategy;
 
  
  
