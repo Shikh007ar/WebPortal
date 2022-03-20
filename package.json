@@ -12,6 +12,7 @@
     "node": "12.16.3",
     "npm": "6.14.4"
   },
+  "runAgrs": ["--env-file", ".env"],
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
